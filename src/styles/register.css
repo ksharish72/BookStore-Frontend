@@ -1,0 +1,54 @@
+.introduceText {
+  color: gray;
+}
+
+.requiredColor {
+  color: red;
+}
+
+.wizardContainer {
+  margin-bottom: 0em !important;
+}
+.registerForm {
+  text-align: center;
+}
+.signIn {
+  width: 25%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.container-signInBtn :hover,
+.container-signUpBtn :hover,
+.container-addbookBtn:hover {
+  color: #d41b2c;
+  background-color: #ffffff;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.signInBtn,
+.signUpBtn,
+.addbookBtn {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  background: #d41b2c;
+  font-family: Montserrat-Bold;
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
+}

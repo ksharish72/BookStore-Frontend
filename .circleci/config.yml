@@ -1,0 +1,58 @@
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+  aws-s3: circleci/aws-s3@1.0.15
+jobs:
+  pr_check:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
+      # - run: npm run test
+  upload_artifact_s3_deploy:
+    docker:
+      - image: "cimg/python:3.6"
+    steps:
+      - checkout
+      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+      - run: sudo apt-get install -y nodejs
+      - run: sudo apt-get install -y build-essential
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: sudo ./aws/install
+      - run: aws --version
+      - run: aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+      - run: aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+      - run: aws configure set region ${AWS_REGION}
+      - run: npm install
+      - run: ls -al
+      - run: CI=false npm run build;
+      - run: rm -rf node_modules
+      - run: zip -r csye6225-ui-${CIRCLE_BUILD_NUM}.zip ./ -x *.git* node_modules/\* aws/\* *.zip
+      - run: mkdir codedeploy_artifact
+      - run: mv csye6225-ui-${CIRCLE_BUILD_NUM}.zip codedeploy_artifact/ 
+      - run: ls -al
+      - aws-s3/sync:
+          from: codedeploy_artifact
+          to: "s3://${CODE_DEPLOY_BUCKET}"
+      - run:
+          name: Code deploy
+          command: |
+                 aws deploy create-deployment --application-name csye6225-webapp \
+                   --deployment-config-name CodeDeployDefault.OneAtATime \
+                   --deployment-group-name csye6225-webapp-ui-deployment \
+                   --ignore-application-stop-failures \
+                   --s3-location bucket=${CODE_DEPLOY_BUCKET},bundleType=zip,key=csye6225-ui-${CIRCLE_BUILD_NUM}.zip   
+workflows:
+  pr_check:
+    jobs:
+      - pr_check
+  build_deploy:
+    jobs:
+      - upload_artifact_s3_deploy:
+          filters:
+            branches:
+              only: master     

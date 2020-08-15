@@ -1,0 +1,32 @@
+.bookcard {
+  display: inline-block;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  margin: 20px;
+}
+.bookContainer {
+  text-align: center;
+}
+.bookprice {
+  color: grey;
+  font-size: 22px;
+}
+
+.bookcard button {
+  border: none;
+  outline: 0;
+  padding: 12px;
+  color: white;
+  background-color: #d41b2c;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.bookcard button:hover {
+  opacity: 0.7;
+}
